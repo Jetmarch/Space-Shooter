@@ -12,9 +12,18 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float minX;
     [SerializeField] private float minY;
 
-    void Start()
+    [SerializeField] private float minTorque;
+    [SerializeField] private float maxTorque;
+
+
+    public void StartEnemySpawn()
     {
         InvokeRepeating("SpawnEnemy", startDelay, spawnRate);
+    }
+
+    public void StopEnemySpawn()
+    {
+        CancelInvoke("SpawnEnemy");
     }
 
     void SpawnEnemy()
@@ -25,6 +34,7 @@ public class EnemySpawner : MonoBehaviour
         float spawnX = Random.Range(minX, maxX);
         float spawnY = Random.Range(minY, maxY);
 
-        Instantiate(enemyList[randomEnemy], new Vector3(spawnX, spawnY), enemyList[randomEnemy].transform.rotation);
+        var enemy = Instantiate(enemyList[randomEnemy], new Vector3(spawnX, spawnY), Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
+        enemy.GetComponent<Rigidbody2D>().AddTorque(Random.Range(minTorque, maxTorque));
     }
 }

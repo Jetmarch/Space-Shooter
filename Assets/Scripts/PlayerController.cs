@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject rocketProjectile;
     [SerializeField] private float rocketCooldown;
     [SerializeField] private Transform projectileSpawn;
-    [SerializeField] private bool isAlive;
     [SerializeField] private bool isRocketReady;
     
     private Rigidbody2D rBody;
@@ -21,13 +21,12 @@ public class PlayerController : MonoBehaviour
     {
         rBody = GetComponent<Rigidbody2D>();
         health = GetComponent<Health>();
-        isAlive = true;
         isRocketReady = true;
     }
 
     private void Update()
     {
-        if(!isAlive)
+        if(!health.isAlive || GameManager.instance.isGamePaused)
         {
             return;
         }
@@ -45,7 +44,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!isAlive)
+        if (!health.isAlive)
         {
             return;
         }
@@ -61,7 +60,13 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.CompareTag("Enemy"))
         {
-            health.GetDamage();
+            health.GetDamage(isRewarded: false);
+            transform.DOShakeScale(0.5f);
+            UIManager.instance.DamageHealth();
+            if(!health.isAlive)
+            {
+                GameManager.instance.GameOver();
+            }
         }
     }
 

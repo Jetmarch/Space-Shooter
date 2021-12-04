@@ -7,6 +7,7 @@ public class Health : MonoBehaviour
     
     [SerializeField] private int maxHealth;
     [SerializeField] private int currentHealth;
+    public bool isAlive { get; private set; }
 
     [SerializeField] private ParticleSystem damageParticles;
     [SerializeField] private AudioClip damageSound;
@@ -17,9 +18,10 @@ public class Health : MonoBehaviour
     private void Start()
     {
         currentHealth = maxHealth;
+        isAlive = true;
     }
 
-    public void GetDamage(int amount = 1)
+    public void GetDamage(int amount = 1, bool isRewarded = true)
     {
         currentHealth -= amount;
         //Sound
@@ -27,14 +29,19 @@ public class Health : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Die();
+            Die(isRewarded);
         }
     }
 
-    public void Die()
+    public void Die(bool isRewarded = true)
     {
         //Sound
         //Particles
+        isAlive = false;
+        if (isRewarded)
+        {
+            UIManager.instance.AddScore();
+        }
         Destroy(this.gameObject);
     }
 }

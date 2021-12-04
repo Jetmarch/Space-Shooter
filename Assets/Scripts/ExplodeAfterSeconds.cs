@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,9 +8,11 @@ public class ExplodeAfterSeconds : MonoBehaviour
     [SerializeField] private float secondsToExplode;
     [SerializeField] private float explosionRadius;
     [SerializeField] private int explosionDamage;
+    private bool isExploded;
     void Start()
     {
         StartCoroutine(TimerSet());
+        isExploded = false;
     }
 
     IEnumerator TimerSet()
@@ -21,8 +24,12 @@ public class ExplodeAfterSeconds : MonoBehaviour
 
     void Boom()
     {
+        if(isExploded)
+        {
+            return;
+        }
         //Create explosion effect
-        Debug.Log("Boom!");
+        GetComponent<Move>().speed = 0;
 
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
         Debug.DrawLine(transform.position, new Vector3(transform.position.x + explosionRadius, transform.position.y), Color.red, 2f);
@@ -40,11 +47,17 @@ public class ExplodeAfterSeconds : MonoBehaviour
             }
         }
 
-        Destroy(this.gameObject);
+        transform.DOShakeScale(0.3f, 15, 15, 60);
+        
+        Destroy(this.gameObject, 0.3f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(collision.CompareTag("Player"))
+        {
+            return;
+        }
         StopCoroutine(TimerSet());
         Boom();
     }

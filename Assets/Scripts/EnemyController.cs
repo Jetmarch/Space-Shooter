@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,15 +16,21 @@ public class EnemyController : MonoBehaviour
         {
             Destroy(collision.gameObject);
             health.GetDamage();
+            transform.DOKill();
+            transform.DOShakeScale(0.3f);
         }
         if (collision.CompareTag("SuperProjectile"))
         {
-            Destroy(collision.gameObject);
             health.GetDamage(5);
         }
         if (collision.CompareTag("Player"))
         {
-            health.Die();
+            health.Die(false);
+        }
+
+        if(collision.CompareTag("KillZone"))
+        {
+            Destroy(this.gameObject);
         }
     }
 
