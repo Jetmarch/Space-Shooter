@@ -6,8 +6,11 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private GameObject projectile;
+    [SerializeField] private GameObject rocketProjectile;
+    [SerializeField] private float rocketCooldown;
     [SerializeField] private Transform projectileSpawn;
     [SerializeField] private bool isAlive;
+    [SerializeField] private bool isRocketReady;
     
     private Rigidbody2D rBody;
     private Health health;
@@ -19,6 +22,7 @@ public class PlayerController : MonoBehaviour
         rBody = GetComponent<Rigidbody2D>();
         health = GetComponent<Health>();
         isAlive = true;
+        isRocketReady = true;
     }
 
     private void Update()
@@ -30,6 +34,11 @@ public class PlayerController : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             GameObject.Instantiate(projectile, projectileSpawn.position, transform.rotation);
+        }
+        if (Input.GetMouseButtonDown(1) && isRocketReady)
+        {
+            GameObject.Instantiate(rocketProjectile, projectileSpawn.position, transform.rotation);
+            StartCoroutine(RocketCooldown());
         }
     }
 
@@ -54,5 +63,12 @@ public class PlayerController : MonoBehaviour
         {
             health.GetDamage();
         }
+    }
+
+    IEnumerator RocketCooldown()
+    {
+        isRocketReady = false;
+        yield return new WaitForSeconds(rocketCooldown);
+        isRocketReady = true;
     }
 }

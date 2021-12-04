@@ -16,6 +16,11 @@ public class EnemyController : MonoBehaviour
             Destroy(collision.gameObject);
             health.GetDamage();
         }
+        if (collision.CompareTag("SuperProjectile"))
+        {
+            Destroy(collision.gameObject);
+            health.GetDamage(5);
+        }
         if (collision.CompareTag("Player"))
         {
             health.Die();
