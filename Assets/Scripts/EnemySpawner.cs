@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> enemyList = new List<GameObject>();
+    [SerializeField] private Transform parentObjectForSpawnedEnemy;
     [SerializeField] private float startDelay;
     [SerializeField] private float spawnRate;
     [SerializeField] private float maxX;
@@ -34,7 +35,7 @@ public class EnemySpawner : MonoBehaviour
         float spawnX = Random.Range(minX, maxX);
         float spawnY = Random.Range(minY, maxY);
 
-        var enemy = Instantiate(enemyList[randomEnemy], new Vector3(spawnX, spawnY), Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
+        var enemy = Instantiate(enemyList[randomEnemy], new Vector3(spawnX, spawnY), Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)), parentObjectForSpawnedEnemy);
         enemy.GetComponent<Rigidbody2D>().AddTorque(Random.Range(minTorque, maxTorque));
     }
 }

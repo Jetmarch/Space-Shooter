@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 671286780613943033}
   - component: {fileID: 7143042354418942392}
   - component: {fileID: 7129696192379658558}
-  m_Layer: 0
+  - component: {fileID: 7753971056294365735}
+  m_Layer: 9
   m_Name: starBig
-  m_TagString: Untagged
+  m_TagString: Stars
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -114,6 +115,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 2
   minSpeed: 1
+  maxSize: 0
+  minSize: 0
 --- !u!50 &7143042354418942392
 Rigidbody2D:
   serializedVersion: 4
@@ -148,3 +151,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxX: 100
+--- !u!58 &7753971056294365735
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671286780613941509}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.115
