@@ -14,9 +14,12 @@ public class Health : MonoBehaviour
     [SerializeField] private ParticleSystem deathParticles;
     [SerializeField] private AudioClip deathSound;
 
+    private AudioSource audioSource;
+
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         currentHealth = maxHealth;
         isAlive = true;
     }
@@ -25,6 +28,7 @@ public class Health : MonoBehaviour
     {
         currentHealth -= amount;
         //Sound
+        if (damageSound != null)  audioSource.PlayOneShot(damageSound);
         //Particles
 
         if (currentHealth <= 0)
@@ -35,6 +39,7 @@ public class Health : MonoBehaviour
 
     public void Die(bool isRewarded = true)
     {
+        if(deathSound != null) AudioSource.PlayClipAtPoint(deathSound, transform.position);
         //Sound
         //Particles
         isAlive = false;

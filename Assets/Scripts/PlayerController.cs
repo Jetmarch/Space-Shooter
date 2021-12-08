@@ -5,13 +5,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Main settings")]
     [SerializeField] private float speed;
     [SerializeField] private GameObject projectile;
     [SerializeField] private GameObject rocketProjectile;
     [SerializeField] private float rocketCooldown;
     [SerializeField] private Transform projectileSpawn;
     [SerializeField] private bool isRocketReady;
-    
+
+    [Header ("Sounds")]
+    [SerializeField] private AudioClip shootSound;
+    [SerializeField] private AudioClip superShootSound;
+    [SerializeField] private AudioClip mainEngineSound;
+    private AudioSource audioSource;
     private Rigidbody2D rBody;
     private Health health;
     private float horizontalAxis;
@@ -19,6 +25,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         rBody = GetComponent<Rigidbody2D>();
         health = GetComponent<Health>();
         isRocketReady = true;
@@ -33,10 +40,12 @@ public class PlayerController : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             GameObject.Instantiate(projectile, projectileSpawn.position, transform.rotation);
+            audioSource.PlayOneShot(shootSound);
         }
         if (Input.GetMouseButtonDown(1) && isRocketReady)
         {
             GameObject.Instantiate(rocketProjectile, projectileSpawn.position, transform.rotation);
+            audioSource.PlayOneShot(superShootSound);
             StartCoroutine(RocketCooldown());
         }
     }
