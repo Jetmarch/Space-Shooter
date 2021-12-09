@@ -12,11 +12,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float rocketCooldown;
     [SerializeField] private Transform projectileSpawn;
     [SerializeField] private bool isRocketReady;
+    [Header("Shield settings")]
+    [SerializeField] private GameObject shield;
+    [SerializeField] private bool isShieldActive;
+    [SerializeField] private float shieldCooldown;
+    [SerializeField] private float shieldUpTime;
+    [SerializeField] private bool isShieldReady;
 
     [Header ("Sounds")]
     [SerializeField] private AudioClip shootSound;
     [SerializeField] private AudioClip superShootSound;
     [SerializeField] private AudioClip mainEngineSound;
+    [SerializeField] private AudioClip shieldUpSound;
+    [SerializeField] private AudioClip shieldDownSound;
     private AudioSource audioSource;
     private Rigidbody2D rBody;
     private Health health;
@@ -29,6 +37,9 @@ public class PlayerController : MonoBehaviour
         rBody = GetComponent<Rigidbody2D>();
         health = GetComponent<Health>();
         isRocketReady = true;
+        shield.SetActive(false);
+        isShieldActive = false;
+        isShieldReady = true;
     }
 
     private void Update()
@@ -48,6 +59,10 @@ public class PlayerController : MonoBehaviour
             audioSource.PlayOneShot(superShootSound);
             StartCoroutine(RocketCooldown());
         }
+        if(Input.GetKeyDown(KeyCode.Space) && isShieldReady)
+        {
+            ShieldUp();
+        }
     }
 
     // Update is called once per frame
@@ -65,9 +80,36 @@ public class PlayerController : MonoBehaviour
         //transform.Translate(new Vector3(0f, Input.GetAxis("Vertical") * speed * Time.deltaTime, 0f));
     }
 
+    private void ShieldUp()
+    {
+        audioSource.PlayOneShot(shieldUpSound);
+        StartCoroutine(ShieldWork());
+        StartCoroutine(ShieldCooldown());
+    }
+
+    private IEnumerator ShieldWork()
+    {
+        shield.SetActive(true);
+        isShieldActive = true;
+
+        yield return new WaitForSeconds(shieldUpTime);
+
+        isShieldActive = false;
+        shield.SetActive(false);
+    }
+
+    private IEnumerator ShieldCooldown()
+    {
+        isShieldReady = false;
+
+        yield return new WaitForSeconds(shieldCooldown);
+
+        isShieldReady = true;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Enemy"))
+        if(collision.CompareTag("Enemy") && !isShieldActive)
         {
             health.GetDamage(isRewarded: false);
             transform.DOShakeScale(0.5f);

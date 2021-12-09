@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour
         {
             health.GetDamage(5);
         }
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") || collision.CompareTag("Shield"))
         {
             health.Die(false);
         }
